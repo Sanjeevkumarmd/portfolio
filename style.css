@@ -641,7 +641,7 @@ html[data-theme="light"] .nav-links a.active {
   animation: float 7s ease-in-out infinite;
 }
 
-/* About & Summary - Compacted to Fit 100% in 1 Screen View */
+/* About & Summary - Compacted & Styled to Fit 100% in 1 Screen View */
 .about-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -650,14 +650,18 @@ html[data-theme="light"] .nav-links a.active {
 }
 
 .summary-card {
-  padding: 2rem 2.4rem;
+  padding: 2.2rem 2.5rem;
 }
 
 .summary-text {
   font-size: 1.15rem;
   color: var(--text-secondary);
   margin-bottom: 1.5rem;
-  line-height: 1.65;
+  line-height: 1.68;
+}
+
+.summary-text strong {
+  color: var(--text-primary);
 }
 
 .stats-grid {
@@ -667,11 +671,49 @@ html[data-theme="light"] .nav-links a.active {
 }
 
 .stat-item {
+  position: relative;
   text-align: center;
-  padding: 1.25rem 0.8rem;
+  padding: 1.35rem 0.9rem;
   background: var(--bg-tertiary);
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid var(--border-color);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+  overflow: hidden;
+}
+
+.stat-item:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.glow-cyan-box:hover {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 8px 25px rgba(0, 242, 254, 0.22);
+}
+
+.glow-violet-box:hover {
+  border-color: var(--accent-violet);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.22);
+}
+
+.glow-emerald-box:hover {
+  border-color: var(--accent-emerald);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.22);
+}
+
+.glow-blue-box:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.22);
+}
+
+.stat-icon-badge {
+  font-size: 1.35rem;
+  color: var(--accent-cyan);
+  margin-bottom: 0.3rem;
+  transition: transform 0.3s ease;
+}
+
+.stat-item:hover .stat-icon-badge {
+  transform: scale(1.25) rotate(8deg);
 }
 
 .stat-number {
