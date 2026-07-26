@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 1. Translucent Liquid Glass Theme Transition originating from Icon Position (Default: Dark Mode)
+  // 1. Transparent Water Drop Theme Transition originating from Icon Center (Default: Dark Mode)
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   const themeIcon = document.getElementById('theme-icon');
 
@@ -42,10 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Apply default Dark theme on load
   applyTheme(currentTheme);
 
-  // Translucent liquid glass wave expanding directly from icon center on theme click
+  // Transparent water drop concentric ripple animation expanding from theme icon center
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', () => {
-      triggerHaptic([25]);
+      triggerHaptic([12]);
 
       const rect = themeToggleBtn.getBoundingClientRect();
       const originX = rect.left + rect.width / 2;
@@ -65,40 +65,55 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       const rippleDiameter = maxDist * 2.25;
-
       const nextTheme = (currentTheme === 'dark') ? 'light' : 'dark';
 
-      const ripple = document.createElement('div');
-      ripple.className = 'theme-ripple-overlay';
-      ripple.style.left = `${originX}px`;
-      ripple.style.top = `${originY}px`;
-      ripple.style.width = `${rippleDiameter}px`;
-      ripple.style.height = `${rippleDiameter}px`;
+      // Primary Transparent Water Drop Ripple
+      const dropPrimary = document.createElement('div');
+      dropPrimary.className = 'water-drop-overlay';
+      dropPrimary.style.left = `${originX}px`;
+      dropPrimary.style.top = `${originY}px`;
+      dropPrimary.style.width = `${rippleDiameter}px`;
+      dropPrimary.style.height = `${rippleDiameter}px`;
 
-      // Glassmorphic translucent wave gradient based on target theme
       if (nextTheme === 'dark') {
-        ripple.style.background = 'radial-gradient(circle, rgba(0, 242, 254, 0.25) 0%, rgba(139, 92, 246, 0.2) 45%, rgba(5, 7, 10, 0.65) 100%)';
+        dropPrimary.style.background = 'radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(139, 92, 246, 0.08) 55%, rgba(5, 7, 10, 0.4) 100%)';
       } else {
-        ripple.style.background = 'radial-gradient(circle, rgba(2, 132, 199, 0.25) 0%, rgba(124, 58, 237, 0.2) 45%, rgba(248, 250, 252, 0.65) 100%)';
+        dropPrimary.style.background = 'radial-gradient(circle, rgba(2, 132, 199, 0.12) 0%, rgba(124, 58, 237, 0.08) 55%, rgba(248, 250, 252, 0.4) 100%)';
       }
 
-      document.body.appendChild(ripple);
+      // Secondary Outer Water Ripple Ring
+      const dropSecondary = document.createElement('div');
+      dropSecondary.className = 'water-drop-overlay secondary-ring';
+      dropSecondary.style.left = `${originX}px`;
+      dropSecondary.style.top = `${originY}px`;
+      dropSecondary.style.width = `${rippleDiameter * 0.85}px`;
+      dropSecondary.style.height = `${rippleDiameter * 0.85}px`;
 
-      void ripple.offsetWidth;
-      ripple.classList.add('expanding');
+      document.body.appendChild(dropPrimary);
+      document.body.appendChild(dropSecondary);
+
+      void dropPrimary.offsetWidth;
+      void dropSecondary.offsetWidth;
+
+      dropPrimary.classList.add('expanding');
+      setTimeout(() => {
+        dropSecondary.classList.add('expanding');
+      }, 70);
 
       setTimeout(() => {
         currentTheme = nextTheme;
         localStorage.setItem('theme-mode', currentTheme);
         applyTheme(currentTheme);
-      }, 320);
+      }, 350);
 
       setTimeout(() => {
-        ripple.style.opacity = '0';
+        dropPrimary.style.opacity = '0';
+        dropSecondary.style.opacity = '0';
         setTimeout(() => {
-          if (ripple.parentNode) ripple.parentNode.removeChild(ripple);
-        }, 350);
-      }, 700);
+          if (dropPrimary.parentNode) dropPrimary.parentNode.removeChild(dropPrimary);
+          if (dropSecondary.parentNode) dropSecondary.parentNode.removeChild(dropSecondary);
+        }, 450);
+      }, 850);
     });
   }
 
