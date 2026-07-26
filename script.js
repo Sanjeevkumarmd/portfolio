@@ -12,21 +12,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 1. Transparent Water Drop Theme Transition originating from Icon Center (Default: Dark Mode)
+  // 1. 3-Second Handwritten Cursive Tap Animation for Top Left Header Name
+  const navLogo = document.getElementById('nav-logo');
+  if (navLogo) {
+    navLogo.addEventListener('click', (e) => {
+      triggerHaptic([15]);
+      navLogo.classList.remove('handwritten-active');
+      void navLogo.offsetWidth; // Force reflow
+      navLogo.classList.add('handwritten-active');
+      
+      setTimeout(() => {
+        navLogo.classList.remove('handwritten-active');
+      }, 3000);
+    });
+  }
+
+  // 2. Ultra-Clear & Transparent Water Drop Theme Transition (Default: Dark Mode)
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   const themeIcon = document.getElementById('theme-icon');
 
-  // Default theme is strictly 'dark' on initial visit
   let currentTheme = localStorage.getItem('theme-mode') || 'dark';
 
   const applyTheme = (theme) => {
     let effectiveTheme = theme === 'light' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', effectiveTheme);
 
-    // Update Icon & Tooltip with smooth spin morph
     if (themeIcon) {
       themeIcon.classList.remove('theme-icon-anim');
-      void themeIcon.offsetWidth; // Trigger reflow for animation restart
+      void themeIcon.offsetWidth;
       themeIcon.classList.add('theme-icon-anim');
 
       if (effectiveTheme === 'dark') {
@@ -39,10 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Apply default Dark theme on load
   applyTheme(currentTheme);
 
-  // Transparent water drop concentric ripple animation expanding from theme icon center
+  // Clear & Transparent Water Drop Ring Expanding from Icon Center
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', () => {
       triggerHaptic([12]);
@@ -64,60 +76,38 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dist > maxDist) maxDist = dist;
       });
 
-      const rippleDiameter = maxDist * 2.25;
+      const ringDiameter = maxDist * 2.25;
       const nextTheme = (currentTheme === 'dark') ? 'light' : 'dark';
 
-      // Primary Transparent Water Drop Ripple
-      const dropPrimary = document.createElement('div');
-      dropPrimary.className = 'water-drop-overlay';
-      dropPrimary.style.left = `${originX}px`;
-      dropPrimary.style.top = `${originY}px`;
-      dropPrimary.style.width = `${rippleDiameter}px`;
-      dropPrimary.style.height = `${rippleDiameter}px`;
+      // Transparent Water Ring Element
+      const waterRing = document.createElement('div');
+      waterRing.className = 'water-drop-ring';
+      waterRing.style.left = `${originX}px`;
+      waterRing.style.top = `${originY}px`;
+      waterRing.style.width = `${ringDiameter}px`;
+      waterRing.style.height = `${ringDiameter}px`;
 
-      if (nextTheme === 'dark') {
-        dropPrimary.style.background = 'radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(139, 92, 246, 0.08) 55%, rgba(5, 7, 10, 0.4) 100%)';
-      } else {
-        dropPrimary.style.background = 'radial-gradient(circle, rgba(2, 132, 199, 0.12) 0%, rgba(124, 58, 237, 0.08) 55%, rgba(248, 250, 252, 0.4) 100%)';
-      }
+      document.body.appendChild(waterRing);
 
-      // Secondary Outer Water Ripple Ring
-      const dropSecondary = document.createElement('div');
-      dropSecondary.className = 'water-drop-overlay secondary-ring';
-      dropSecondary.style.left = `${originX}px`;
-      dropSecondary.style.top = `${originY}px`;
-      dropSecondary.style.width = `${rippleDiameter * 0.85}px`;
-      dropSecondary.style.height = `${rippleDiameter * 0.85}px`;
-
-      document.body.appendChild(dropPrimary);
-      document.body.appendChild(dropSecondary);
-
-      void dropPrimary.offsetWidth;
-      void dropSecondary.offsetWidth;
-
-      dropPrimary.classList.add('expanding');
-      setTimeout(() => {
-        dropSecondary.classList.add('expanding');
-      }, 70);
+      void waterRing.offsetWidth;
+      waterRing.classList.add('expanding');
 
       setTimeout(() => {
         currentTheme = nextTheme;
         localStorage.setItem('theme-mode', currentTheme);
         applyTheme(currentTheme);
-      }, 350);
+      }, 300);
 
       setTimeout(() => {
-        dropPrimary.style.opacity = '0';
-        dropSecondary.style.opacity = '0';
+        waterRing.style.opacity = '0';
         setTimeout(() => {
-          if (dropPrimary.parentNode) dropPrimary.parentNode.removeChild(dropPrimary);
-          if (dropSecondary.parentNode) dropSecondary.parentNode.removeChild(dropSecondary);
-        }, 450);
-      }, 850);
+          if (waterRing.parentNode) waterRing.parentNode.removeChild(waterRing);
+        }, 350);
+      }, 750);
     });
   }
 
-  // 2. 60fps Throttled Top Navbar Scroll Handler
+  // 3. 60fps Throttled Top Navbar Scroll & Scroll-Spy Handler
   const navbar = document.getElementById('navbar');
   let isScrollTicking = false;
 
@@ -160,7 +150,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
 
-  // 3. Mobile Navigation Menu Toggle
+  // 4. Floating Back to Top Button Popup & Smooth Scroll
+  const backToTopBtn = document.getElementById('back-to-top-btn');
+  if (backToTopBtn) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 350) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    }, { passive: true });
+
+    backToTopBtn.addEventListener('click', () => {
+      triggerHaptic([15]);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+
+  // 5. Mobile Navigation Menu Toggle
   const navToggle = document.getElementById('nav-toggle');
   const navLinksList = document.querySelectorAll('.nav-links a');
 
@@ -186,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. Smooth Typewriter Effect for Hero Section
+  // 6. Smooth Typewriter Effect for Hero Section
   const typedElement = document.getElementById('typed-text');
   if (typedElement) {
     const words = JSON.parse(typedElement.getAttribute('data-words'));
@@ -207,12 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
       let typeSpeed = isDeleting ? 40 : 80;
 
       if (!isDeleting && charIndex === currentWord.length) {
-        typeSpeed = 2200; // Pause at end of word
+        typeSpeed = 2200;
         isDeleting = true;
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         wordIndex = (wordIndex + 1) % words.length;
-        typeSpeed = 400; // Pause before typing next word
+        typeSpeed = 400;
       }
 
       setTimeout(typeEffect, typeSpeed);
@@ -221,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     typeEffect();
   }
 
-  // 5. Scroll-Triggered Reveal Animations using IntersectionObserver
+  // 7. Scroll-Triggered Reveal Animations using IntersectionObserver
   const revealElements = document.querySelectorAll('.reveal-left, .reveal-right, .reveal-scale, .reveal-up, .reveal-center-expand');
 
   const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -238,14 +248,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealElements.forEach(el => revealObserver.observe(el));
 
-  // 6. Skill Pill Tap Unique Animations & Haptic Vibration
+  // 8. Skill Pill Tap Unique Animations & Haptic Vibration
   document.querySelectorAll('.skill-pill').forEach(pill => {
     pill.addEventListener('click', () => {
       triggerHaptic([18]);
       const animType = pill.getAttribute('data-anim') || 'blink';
       const animClass = `anim-${animType}`;
       pill.classList.remove(animClass);
-      void pill.offsetWidth; // Force reflow
+      void pill.offsetWidth;
       pill.classList.add(animClass);
       setTimeout(() => {
         pill.classList.remove(animClass);
@@ -253,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 7. Project Category Filtering Logic with Pill Border Highlight
+  // 9. Project Category Filtering Logic with Pill Border Highlight
   const filterBtns = document.querySelectorAll('.filter-btn');
   const projectCards = document.querySelectorAll('.project-card');
 
@@ -280,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 8. PDF Quick Preview Modal (Light Paper Mode Default)
+  // 10. PDF Quick Preview Modal (Light Paper Mode Default)
   const pdfModal = document.getElementById('pdf-modal');
   const pdfIframe = document.getElementById('pdf-modal-iframe');
   const pdfTitle = document.getElementById('pdf-modal-title');
@@ -292,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const pdfThemeLabel = document.getElementById('pdf-theme-label');
   const pdfModalBody = pdfModal ? pdfModal.querySelector('.pdf-modal-body') : null;
 
-  let isPdfDarkMode = false; // Default: Clean Light Paper view
+  let isPdfDarkMode = false;
 
   const updatePdfThemeUI = () => {
     if (!pdfModalBody) return;
@@ -368,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 9. Contact Info Clipboard Copy Helper with Haptics
+  // 11. Contact Info Clipboard Copy Helper
   const copyToClipboard = (text, iconElement, originalClass) => {
     triggerHaptic([20, 50, 20]);
     navigator.clipboard.writeText(text).then(() => {
